@@ -1,0 +1,504 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>ScriptDeck · 风格 C 全套界面</title>
+<style>
+:root{
+  --bg:#0A0B0D; --panel:#101216; --elev:#16191E; --line:#24272E; --line2:#1A1D23;
+  --text:#D8DBE2; --muted:#8B919C; --dim:#5E6470; --accent:#F0A93B;
+  --ok:#4ADE80; --warn:#F0A93B; --bad:#F87171; --off:#565C68;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:#050506;display:flex;align-items:center;justify-content:center;
+  font-family:"Cascadia Code",Consolas,"Noto Sans SC",monospace;color:var(--text);
+  -webkit-font-smoothing:antialiased}
+.i{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.win{width:1120px;height:720px;background:var(--bg);border-radius:8px;overflow:hidden;position:relative;
+  display:flex;flex-direction:column;border:1px solid #23262C;box-shadow:0 30px 90px rgba(0,0,0,.8)}
+.tb{height:34px;flex:none;display:flex;align-items:center;gap:14px;padding-left:14px;
+  background:var(--panel);border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:600;letter-spacing:.14em}
+.mark{width:16px;height:16px;border:1px solid var(--accent);color:var(--accent);display:flex;
+  align-items:center;justify-content:center;font-size:9px;border-radius:3px}
+.glob{font-size:10px;color:var(--dim);letter-spacing:.08em}
+.glob b{font-weight:500}
+.glob b.run{color:var(--ok)} .glob b.err{color:var(--bad)} .glob b.stop{color:var(--off)}
+.tbr{margin-left:auto;display:flex;align-items:center;gap:8px}
+.btn{font-family:inherit;display:inline-flex;align-items:center;gap:6px;height:22px;padding:0 9px;
+  border-radius:3px;border:1px solid var(--line);background:var(--elev);color:var(--muted);
+  font-size:10.5px;letter-spacing:.04em;cursor:pointer;white-space:nowrap}
+.btn.primary{border-color:#8A6320;background:rgba(240,169,59,.12);color:var(--accent)}
+.btn.hot{border-color:#5A2A2A;background:rgba(248,113,113,.1);color:var(--bad)}
+.btn.dim{color:var(--dim)}
+.wctl{display:flex;margin-left:4px}
+.wctl span{width:38px;height:34px;display:flex;align-items:center;justify-content:center;color:var(--dim);font-size:10px}
+.wctl span.close:hover{background:#C42B1C;color:#fff}
+.body{flex:1;display:flex;min-height:0}
+.rail{width:196px;flex:none;padding:10px 8px;border-right:1px solid var(--line);display:flex;flex-direction:column}
+.rail .label{font-size:9px;color:var(--dim);padding:9px 8px 5px;letter-spacing:.16em}
+.nav{height:28px;display:flex;align-items:center;gap:8px;padding:0 8px;border-radius:3px;
+  font-size:11.5px;color:var(--muted);cursor:pointer;position:relative}
+.nav .n{margin-left:auto;font-size:9.5px;color:var(--dim)}
+.nav.on{background:var(--elev);color:var(--accent)}
+.nav.on:before{content:"";position:absolute;left:0;top:6px;bottom:6px;width:2px;background:var(--accent)}
+.nav .dot{width:6px;height:6px;border-radius:1px;flex:none}
+.rail .sp{flex:1}
+.rail .foot{border-top:1px solid var(--line);padding-top:6px;margin-top:6px}
+.list{width:320px;flex:none;display:flex;flex-direction:column;border-right:1px solid var(--line);background:var(--panel)}
+.lhead{padding:11px 12px 8px;flex:none;border-bottom:1px solid var(--line2)}
+.ltitle{display:flex;align-items:baseline;gap:8px}
+.ltitle h1{font-size:11.5px;margin:0;font-weight:600;letter-spacing:.06em}
+.ltitle span{font-size:9.5px;color:var(--dim)}
+.chips{display:flex;gap:10px;margin-top:7px;font-size:9.5px;color:var(--dim);letter-spacing:.03em}
+.chip{display:inline-flex;align-items:center;gap:4px}
+.chip b{color:var(--text);font-weight:500}
+.dot{width:5px;height:5px;border-radius:50%;flex:none}
+.rows{flex:1;overflow:hidden}
+.row{height:46px;display:flex;align-items:center;gap:9px;padding:0 11px;border-bottom:1px solid var(--line2);
+  cursor:pointer;position:relative}
+.row:hover{background:#14171C}
+.row.on{background:#15181D}
+.row.on:before{content:"";position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--accent)}
+.st{font-size:8.5px;letter-spacing:.06em;width:32px;flex:none}
+.st.run{color:var(--ok)} .st.stop{color:var(--off)} .st.err{color:var(--bad)}
+.rinfo{min-width:0;flex:1}
+.rname{font-size:11.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rmeta{font-size:9.5px;color:var(--dim);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rtime{font-size:9.5px;color:var(--dim);flex:none}
+.detail{flex:1;min-width:0;display:flex;flex-direction:column;background:var(--bg)}
+.dhead{padding:12px 16px 0;flex:none}
+.dtitle{display:flex;align-items:center;gap:9px}
+.dtitle h2{margin:0;font-size:13.5px;font-weight:600;letter-spacing:.02em}
+.pill{font-size:9px;letter-spacing:.1em;padding:3px 7px;border-radius:2px}
+.pill.ok{color:var(--ok);background:rgba(74,222,128,.1);border:1px solid rgba(74,222,128,.28)}
+.pill.err{color:var(--bad);background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.28)}
+.dacts{margin-left:auto;display:flex;gap:5px}
+.dpath{font-size:9.5px;color:var(--dim);margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tabs{display:flex;margin-top:12px;border-bottom:1px solid var(--line)}
+.tab{padding:0 12px 8px;font-size:10.5px;color:var(--dim);letter-spacing:.04em}
+.tab.on{color:var(--accent);box-shadow:inset 0 -1px 0 var(--accent)}
+.tab i{color:#3E444E;font-style:normal;margin-right:5px;font-size:9px}
+.dbody{flex:1;padding:12px 16px 14px;overflow:hidden;display:flex;flex-direction:column;gap:10px}
+.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.metric{border:1px solid var(--line);background:var(--panel);border-radius:4px;padding:8px 10px}
+.metric .k{font-size:8.5px;color:var(--dim);letter-spacing:.12em}
+.metric .v{font-size:11.5px;margin-top:5px;display:flex;align-items:center;gap:6px}
+.metric .v small{font-size:9.5px;color:var(--muted)}
+.term{flex:1;min-height:0;border:1px solid var(--line);border-radius:4px;background:#07080A;display:flex;flex-direction:column;overflow:hidden}
+.termbar{height:26px;flex:none;display:flex;align-items:center;gap:8px;padding:0 9px;background:var(--panel);
+  border-bottom:1px solid var(--line2);font-size:9.5px;color:var(--dim);letter-spacing:.05em}
+.termbar .dots{display:flex;gap:3px;margin-right:2px}
+.termbar .dots i{width:6px;height:6px;border-radius:50%;background:#2A2E36;display:block}
+.termbar .follow{margin-left:auto;color:var(--ok);display:flex;align-items:center;gap:5px}
+.termbody{padding:9px 11px;font-size:10.5px;line-height:1.85;overflow:hidden;flex:1}
+.ln{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#AEB4BF}
+.ln time{color:#454B56;margin-right:9px}
+.lv{display:inline-block;width:34px;color:#454B56;letter-spacing:.04em}
+.ln.warn .lv{color:var(--warn)} .ln.warn{color:#C9A468}
+.ln.err .lv{color:var(--bad)} .ln.err{color:#D99A9A}
+.ln .dim{color:#5A616C}
+.prompt{border-top:1px solid var(--line2);padding:7px 11px;font-size:10.5px;color:var(--dim);display:flex;gap:8px;align-items:center;background:#0A0B0D}
+.prompt b{color:var(--accent);font-weight:500}
+.cursor{width:6px;height:12px;background:var(--accent);display:inline-block}
+.side{display:flex;gap:8px}
+.events{flex:1;border:1px solid var(--line);border-radius:4px;background:var(--panel);padding:2px 9px}
+.ev{display:flex;gap:9px;padding:5px 0;font-size:10px;color:var(--muted)}
+.ev time{color:var(--dim);flex:none;width:36px}
+.ev b{color:var(--text);font-weight:500}
+.banner{border:1px solid #5A2A2A;background:rgba(248,113,113,.08);border-radius:4px;padding:9px 11px;display:flex;gap:10px;align-items:flex-start}
+.banner .t{font-size:11px;color:#F3AAAA;font-weight:500;letter-spacing:.02em}
+.banner .d{font-size:10px;color:#B98989;margin-top:4px;line-height:1.6}
+.banner .acts{margin-left:auto;display:flex;gap:5px;flex:none}
+/* overlay + drawer */
+.ov{position:absolute;inset:34px 0 0 0;background:rgba(3,4,5,.66)}
+.drawer{position:absolute;top:34px;right:0;bottom:0;width:520px;background:var(--panel);border-left:1px solid var(--line);
+  display:flex;flex-direction:column;box-shadow:-24px 0 60px rgba(0,0,0,.55)}
+.dh{padding:13px 16px 10px;border-bottom:1px solid var(--line2);display:flex;align-items:center;gap:8px;flex:none}
+.dh h3{margin:0;font-size:12px;letter-spacing:.06em;font-weight:600}
+.dh .x{margin-left:auto;color:var(--dim)}
+.db{flex:1;overflow:hidden;padding:11px 16px;display:flex;flex-direction:column;gap:9px}
+.presets{display:flex;gap:6px}
+.preset{flex:1;border:1px solid var(--line);border-radius:3px;padding:6px 8px;font-size:9.5px;color:var(--muted);background:var(--elev)}
+.preset.on{border-color:#8A6320;background:rgba(240,169,59,.09);color:var(--accent)}
+.preset span{display:block;color:var(--dim);font-size:8px;margin-top:3px;letter-spacing:.08em}
+.sect{border-top:1px solid var(--line2);padding-top:9px}
+.sect h4{margin:0 0 7px;font-size:9px;color:var(--dim);letter-spacing:.16em;font-weight:500}
+.f{margin-bottom:7px}
+.f label{display:block;font-size:9.5px;color:var(--muted);margin-bottom:4px}
+.inp{height:26px;display:flex;align-items:center;padding:0 8px;background:#0B0D10;border:1px solid var(--line);
+  border-radius:3px;font-size:10.5px;color:var(--text);white-space:nowrap;overflow:hidden}
+.inp.dim{color:var(--dim)}
+.inp .tail{margin-left:auto;color:var(--dim);font-size:9px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.seg{display:flex;border:1px solid var(--line);border-radius:3px;overflow:hidden;height:25px;background:#0B0D10}
+.seg div{flex:1;display:flex;align-items:center;justify-content:center;font-size:9.5px;color:var(--dim);border-left:1px solid var(--line)}
+.seg div:first-child{border-left:0}
+.seg div.on{background:rgba(240,169,59,.12);color:var(--accent)}
+.dfoot{flex:none;padding:10px 16px;border-top:1px solid var(--line);display:flex;gap:7px;align-items:center}
+.dfoot .r{margin-left:auto;display:flex;gap:7px}
+/* modal */
+.modal{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:752px;background:var(--panel);
+  border:1px solid #2E323A;border-radius:5px;box-shadow:0 30px 80px rgba(0,0,0,.7);display:flex;flex-direction:column;overflow:hidden}
+.mh{height:44px;display:flex;align-items:center;gap:10px;padding:0 14px;border-bottom:1px solid var(--line2)}
+.mh h3{margin:0;font-size:12px;letter-spacing:.04em}
+.mh .path{font-size:9.5px;color:var(--dim);background:#0B0D10;border:1px solid var(--line);padding:3px 7px;border-radius:3px}
+.mb{padding:0 0 2px}
+.tbl{width:100%;border-collapse:collapse;font-size:10.5px;table-layout:fixed}
+.tbl th{font-size:8.5px;color:var(--dim);text-align:left;font-weight:500;letter-spacing:.12em;padding:8px 14px;border-bottom:1px solid var(--line2)}
+.tbl td{padding:9px 14px;border-bottom:1px solid var(--line2);color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tbl tr.selrow td{background:rgba(240,169,59,.04)}
+.tbl .fn{color:var(--text)}
+.tbl .tag{font-size:8.5px;color:var(--dim);letter-spacing:.06em}
+.tbl .warn{color:var(--warn);font-size:9px}
+.tbl .okt{color:var(--ok);font-size:9px}
+.cb{width:12px;height:12px;border:1px solid #3A3F48;border-radius:2px;display:inline-flex;align-items:center;justify-content:center;font-size:8px;color:var(--accent)}
+.cb.on{border-color:#8A6320;background:rgba(240,169,59,.14)}
+.mf{height:46px;display:flex;align-items:center;gap:9px;padding:0 14px;border-top:1px solid var(--line2);font-size:10px;color:var(--dim)}
+.mf .r{margin-left:auto;display:flex;gap:7px}
+/* settings */
+.setwrap{flex:1;overflow:hidden;padding:16px 26px;display:flex;flex-direction:column;gap:12px}
+.sethead{display:flex;align-items:baseline;gap:9px}
+.sethead h2{margin:0;font-size:14px;letter-spacing:.04em}
+.sethead span{font-size:9.5px;color:var(--dim)}
+.setcard{border:1px solid var(--line);background:var(--panel);border-radius:4px;padding:12px 14px}
+.setcard h3{margin:0 0 8px;font-size:9px;color:var(--dim);letter-spacing:.16em;font-weight:500}
+.setrow{display:flex;align-items:center;gap:12px;padding:8px 0;border-top:1px solid var(--line2)}
+.setrow.first{border-top:0}
+.setrow .lbl{font-size:11px}
+.setrow .hint{font-size:9px;color:var(--dim);margin-top:2px}
+.setrow .ctl{margin-left:auto;display:flex;align-items:center;gap:8px}
+.sw{width:32px;height:17px;border-radius:999px;background:#2A2E36;position:relative;flex:none;border:1px solid transparent}
+.sw.on{background:rgba(240,169,59,.28);border-color:#8A6320}
+.sw i{position:absolute;top:1.5px;left:2px;width:12px;height:12px;border-radius:50%;background:#8B919C}
+.sw.on i{left:16px;background:var(--accent)}
+.sel{height:24px;display:flex;align-items:center;gap:8px;padding:0 8px;border:1px solid var(--line);background:#0B0D10;border-radius:3px;font-size:9.5px;color:var(--muted)}
+.sel .c{color:var(--dim);font-size:8px}
+/* empty */
+.empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px 18px}
+.empty .glyph{width:42px;height:42px;border:1px dashed #333841;border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--dim);margin-bottom:13px}
+.empty h3{margin:0 0 6px;font-size:12.5px;font-weight:500}
+.empty p{margin:0 0 13px;font-size:10px;color:var(--dim);line-height:1.7;max-width:236px}
+.empty .acts{display:flex;gap:7px}
+.plist{margin-top:20px;width:100%;max-width:236px;display:flex;flex-direction:column;gap:5px}
+.prow{display:flex;align-items:center;gap:7px;border:1px solid var(--line2);border-radius:3px;padding:6px 8px;font-size:9.5px;color:var(--muted);text-align:left}
+.prow span{margin-left:auto;color:#3E444E;font-size:8.5px}
+.guide{padding:24px 26px;max-width:520px}
+.guide h2{font-size:14px;margin:0 0 6px;font-weight:600;letter-spacing:.02em}
+.guide p.sub{color:var(--dim);font-size:10.5px;margin:0 0 16px;line-height:1.7}
+.step{display:flex;gap:11px;padding:10px 0;border-top:1px solid var(--line2)}
+.step .no{width:19px;height:19px;border:1px solid #8A6320;color:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;flex:none;margin-top:1px}
+.step b{font-size:10.5px;font-weight:500;display:block}
+.step span{font-size:9.5px;color:var(--dim);display:block;margin-top:3px;line-height:1.7}
+.codebox{margin-top:14px;border:1px solid var(--line);background:#07080A;border-radius:4px;padding:9px 11px;font-size:9.5px;color:var(--muted);line-height:1.9}
+.codebox .dim{color:#454B56}
+/* tray */
+.traybody{width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#050506}
+.tray{width:296px;background:#14171C;border:1px solid #2A2E36;border-radius:5px;box-shadow:0 20px 50px rgba(0,0,0,.75);overflow:hidden}
+.th{padding:9px 12px;border-bottom:1px solid var(--line2);display:flex;align-items:center;gap:7px;font-size:9.5px;color:var(--dim);letter-spacing:.04em}
+.th b{color:var(--text);font-weight:500}
+.tl{padding:3px 0}
+.ti{height:28px;display:flex;align-items:center;gap:8px;padding:0 12px;font-size:10px;color:var(--muted)}
+.ti .nm{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text)}
+.ti .tm{font-size:8.5px;color:var(--dim)}
+.tsep{height:1px;background:var(--line2);margin:3px 0}
+.tmi{height:29px;display:flex;align-items:center;gap:9px;padding:0 12px;font-size:10px;color:var(--muted)}
+.tmi .k{margin-left:auto;font-size:8.5px;color:var(--dim)}
+.tfoot{padding:7px 12px;border-top:1px solid var(--line2);font-size:8.5px;color:var(--dim);display:flex;align-items:center;gap:6px}
+</style>
+</head>
+<body>
+<script>
+const ICONS = `<svg width="0" height="0" style="position:absolute">
+<symbol id="i-grid" viewBox="0 0 16 16"><rect x="2.5" y="2.5" width="4.6" height="4.6" rx=".8"/><rect x="8.9" y="2.5" width="4.6" height="4.6" rx=".8"/><rect x="2.5" y="8.9" width="4.6" height="4.6" rx=".8"/><rect x="8.9" y="8.9" width="4.6" height="4.6" rx=".8"/></symbol>
+<symbol id="i-folder" viewBox="0 0 16 16"><path d="M2 4.6h4l1.3 1.6H14v7H2z"/></symbol>
+<symbol id="i-settings" viewBox="0 0 16 16"><circle cx="8" cy="8" r="2.2"/><path d="M8 1.8v1.6M8 12.6v1.6M1.8 8h1.6M12.6 8h1.6M3.6 3.6l1.1 1.1M11.3 11.3l1.1 1.1M12.4 3.6l-1.1 1.1M4.7 11.3l-1.1 1.1"/></symbol>
+<symbol id="i-info" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6"/><path d="M8 7.2v4M8 4.9v.2"/></symbol>
+</svg>`;
+const ic = n => `<svg class="i"><use href="#i-${n}"/></svg>`;
+
+const ROWS = [
+ {id:'shim', st:'run', name:'CORS 中转服务', meta:'node · 127.0.0.1:15722', time:'2h14m'},
+ {id:'sub', st:'run', name:'字幕监听器', meta:'python · 127.0.0.1:8710', time:'41m'},
+ {id:'img', st:'run', name:'图片压缩服务', meta:'node · 127.0.0.1:6001', time:'6h02m'},
+ {id:'ocr', st:'run', name:'本地 OCR 网关', meta:'python · 127.0.0.1:9002', time:'6h02m'},
+ {id:'old', st:'err', name:'旧版翻译代理', meta:'node · 127.0.0.1:15721', time:'09:02'},
+ {id:'dy', st:'stop', name:'抖音财报抓取', meta:'node · no port', time:'—'},
+ {id:'clip', st:'stop', name:'剪贴板归档', meta:'pwsh · no port', time:'—'},
+ {id:'probe', st:'stop', name:'端口探针', meta:'node · no port', time:'—'}
+];
+const stLabel = {run:'RUN', stop:'STOP', err:'ERR'};
+const rowsHTML = active => ROWS.map(r => `
+  <div class="row ${r.id===active?'on':''}">
+    <span class="st ${r.st}">${stLabel[r.st]}</span>
+    <div class="rinfo"><div class="rname">${r.name}</div><div class="rmeta">${r.meta}</div></div>
+    <span class="rtime">${r.time}</span>
+  </div>`).join('');
+
+const headHTML = `<div class="lhead"><div class="ltitle"><h1>ALL SERVICES</h1><span>8</span></div>
+  <div class="chips">
+    <span class="chip"><span class="dot" style="background:var(--ok)"></span>RUN <b>4</b></span>
+    <span class="chip"><span class="dot" style="background:var(--off)"></span>STOP <b>3</b></span>
+    <span class="chip"><span class="dot" style="background:var(--bad)"></span>ERR <b>1</b></span>
+  </div></div>`;
+const headEmpty = `<div class="lhead"><div class="ltitle"><h1>ALL SERVICES</h1><span>0</span></div>
+  <div class="chips"><span class="chip">RUN 0</span><span class="chip">STOP 0</span><span class="chip">ERR 0</span></div></div>`;
+const termHTML = (lines, prompt) => `<div class="term">
+  <div class="termbar"><span class="dots"><i></i><i></i><i></i></span><span>proxy.log</span>
+    <span style="color:#3E444E">|</span><span>stdout stderr</span>
+    <span class="follow"><span class="dot" style="background:var(--ok)"></span>FOLLOW</span></div>
+  <div class="termbody">${lines}</div>
+  <div class="prompt"><b>PS&gt;</b><span>${prompt}</span><span style="margin-left:auto;color:#3E444E">Ctrl+Enter 重启</span><span class="cursor"></span></div>
+</div>`;
+
+const OVERVIEW_LINES = `
+<div class="ln"><time>09:19:20</time><span class="lv">INFO</span>CORS shim listening on http://127.0.0.1:15722 <span class="dim">-&gt;</span> http://127.0.0.1:15721</div>
+<div class="ln"><time>09:19:20</time><span class="lv">INFO</span>upstream health probe ok <span class="dim">200 12ms</span></div>
+<div class="ln"><time>09:20:03</time><span class="lv">INFO</span>POST /v1/chat/completions <span class="dim">200 3592ms</span></div>
+<div class="ln"><time>09:20:11</time><span class="lv">INFO</span>POST /v1/chat/completions <span class="dim">200 2914ms</span></div>
+<div class="ln"><time>09:20:47</time><span class="lv">INFO</span>OPTIONS /v1/models <span class="dim">204 0ms</span></div>
+<div class="ln"><time>09:21:44</time><span class="lv">INFO</span>OPTIONS /v1/chat/completions <span class="dim">204 0ms</span></div>
+<div class="ln"><time>09:22:02</time><span class="lv warn">WARN</span>upstream slow <span class="dim">6.2s · retry 0/2</span></div>
+<div class="ln"><time>09:22:08</time><span class="lv">INFO</span>POST /v1/chat/completions <span class="dim">200 6801ms</span></div>`;
+
+const ERROR_LINES = `
+<div class="ln"><time>09:01:58</time><span class="lv">INFO</span>booting legacy-translate-proxy v0.8.2</div>
+<div class="ln"><time>09:01:59</time><span class="lv">INFO</span>loading config ./config.json</div>
+<div class="ln err"><time>09:02:00</time><span class="lv">ERR</span>Error: listen EADDRINUSE: address already in use 127.0.0.1:15721</div>
+<div class="ln err"><time>09:02:00</time><span class="lv">ERR</span>    at Server.setupListenHandle (node:net:1937:16)</div>
+<div class="ln"><time>09:02:00</time><span class="lv">ERR</span>    at listenInCluster (node:net:1994:12)</div>
+<div class="ln"><time>09:02:00</time><span class="lv">ERR</span>    at Server.listen (node:net:2101:7)</div>
+<div class="ln"><time>09:02:00</time><span class="lv">INFO</span>process exited <span class="dim">code=1 signal=null</span></div>
+<div class="ln warn"><time>09:02:03</time><span class="lv">WARN</span>auto-restart 2/5 <span class="dim">backoff 4s</span></div>`;
+
+function detailOverview(){
+ return `<div class="dhead">
+  <div class="dtitle"><h2>CORS 中转服务</h2><span class="pill ok">RUNNING</span>
+    <div class="dacts"><button class="btn hot">■ STOP</button><button class="btn">↻ RESTART</button><button class="btn">···</button></div></div>
+  <div class="dpath">C:\\Users\\user\\tools\\cors-proxy\\proxy.mjs</div>
+  <div class="tabs"><div class="tab on"><i>01</i>概览</div><div class="tab"><i>02</i>日志</div><div class="tab"><i>03</i>配置</div><div class="tab"><i>04</i>健康</div></div>
+ </div>
+ <div class="dbody">
+  <div class="metrics">
+    <div class="metric"><div class="k">HEALTH</div><div class="v"><span class="dot" style="background:var(--ok)"></span>端口可连 <small>3ms</small></div></div>
+    <div class="metric"><div class="k">UPTIME</div><div class="v">2h 14m <small>PID 29648</small></div></div>
+    <div class="metric"><div class="k">RESTARTS</div><div class="v">0 <small>/ 5</small></div></div>
+  </div>
+  ${termHTML(OVERVIEW_LINES,'node proxy.mjs')}
+  <div class="side">
+    <div class="events">
+      <div class="ev"><time>09:21</time><span>健康检查通过 · 端口 <b>15722</b></span></div>
+      <div class="ev"><time>09:19</time><span>已启动 · 监听 <b>127.0.0.1:15722</b></span></div>
+      <div class="ev"><time>09:19</time><span>端口占用检查 · <b>空闲</b></span></div>
+    </div>
+    <div class="events" style="width:206px">
+      <div class="ev"><time>AUTO</time><span>开机启动 <b>ON</b></span></div>
+      <div class="ev"><time>AUTO</time><span>崩溃重启 <b>开启</b></span></div>
+      <div class="ev"><time>LOG</time><span>保留 <b>5 份 · 5MB</b></span></div>
+    </div>
+  </div>
+ </div>`;
+}
+
+function detailError(){
+ return `<div class="dhead">
+  <div class="dtitle"><h2>旧版翻译代理</h2><span class="pill err">EXITED · CODE 1</span>
+    <div class="dacts"><button class="btn primary">▶ START</button><button class="btn">↻ RESTART</button><button class="btn">···</button></div></div>
+  <div class="dpath">C:\\Users\\user\\projects\\legacy-translate\\index.js</div>
+  <div class="tabs"><div class="tab on"><i>01</i>概览</div><div class="tab"><i>02</i>日志</div><div class="tab"><i>03</i>配置</div><div class="tab"><i>04</i>健康</div></div>
+ </div>
+ <div class="dbody">
+  <div class="banner">
+    <div>
+      <div class="t">进程异常退出 · 退出码 1</div>
+      <div class="d">已自动重启 2 / 5 次，达到上限后停止重试。最后错误：端口 15721 已被 PID 26124 占用。</div>
+    </div>
+    <div class="acts"><button class="btn">查看最后 50 行</button><button class="btn">排查端口</button></div>
+  </div>
+  <div class="metrics">
+    <div class="metric"><div class="k">HEALTH</div><div class="v" style="color:var(--bad)">失败 <small>connection refused</small></div></div>
+    <div class="metric"><div class="k">LAST RUN</div><div class="v">2s <small>09:02</small></div></div>
+    <div class="metric"><div class="k">RESTARTS</div><div class="v" style="color:var(--warn)">2 <small>/ 5</small></div></div>
+  </div>
+  ${termHTML(ERROR_LINES,'node index.js --port 15721')}
+  <div class="side">
+    <div class="events">
+      <div class="ev"><time>09:02</time><span>进程退出 · <b>code=1</b></span></div>
+      <div class="ev"><time>09:02</time><span>第 2 次自动重启失败</span></div>
+      <div class="ev"><time>09:01</time><span>端口 <b>15721</b> 被 node.exe (26124) 占用</span></div>
+    </div>
+    <div class="events" style="width:206px">
+      <div class="ev"><time>RULE</time><span>重启策略 <b>on-failure</b></span></div>
+      <div class="ev"><time>RULE</time><span>退避上限 <b>30s</b></span></div>
+      <div class="ev"><time>LOG</time><span>最后写入 <b>09:02</b></span></div>
+    </div>
+  </div>
+ </div>`;
+}
+const drawerHTML = `<div class="ov"></div><div class="drawer">
+  <div class="dh"><h3>新建服务</h3><span style="font-size:9px;color:var(--dim)">PRESET</span><span class="x">✕</span></div>
+  <div class="db">
+    <div class="presets">
+      <div class="preset on">NODE HTTP 代理<span>NODE PROXY</span></div>
+      <div class="preset">PYTHON 服务<span>PYTHON</span></div>
+      <div class="preset">POWERSHELL 守护<span>PWSH</span></div>
+    </div>
+    <div class="sect"><h4>基本信息</h4>
+      <div class="f"><label>名称</label><div class="inp">CORS 中转服务</div></div>
+      <div class="row2">
+        <div class="f"><label>分组</label><div class="inp">代理 <span class="tail">▾</span></div></div>
+        <div class="f"><label>启动方式</label><div class="inp">随应用启动 <span class="tail">▾</span></div></div>
+      </div>
+    </div>
+    <div class="sect"><h4>运行方式</h4>
+      <div class="f"><label>脚本路径</label><div class="inp">C:\\Users\\user\\tools\\cors-proxy\\proxy.mjs <span class="tail">浏览</span></div></div>
+      <div class="row2">
+        <div class="f"><label>参数</label><div class="inp dim">无</div></div>
+        <div class="f"><label>工作目录</label><div class="inp">..\\cors-proxy <span class="tail">▾</span></div></div>
+      </div>
+    </div>
+    <div class="sect"><h4>环境变量</h4>
+      <div class="row2">
+        <div class="f"><div class="inp">SHIM_PORT <span class="tail">15722</span></div></div>
+        <div class="f"><div class="inp">SHIM_UPSTREAM <span class="tail">127.0.0.1:15721</span></div></div>
+      </div>
+      <div class="f"><div class="inp dim">＋ 添加变量</div></div>
+    </div>
+    <div class="sect"><h4>健康检查</h4>
+      <div class="seg" style="margin-bottom:9px"><div>进程存活</div><div class="on">端口可连</div><div>HTTP 探活</div></div>
+      <div class="row2">
+        <div class="f"><label>端口</label><div class="inp">15722</div></div>
+        <div class="f"><label>间隔</label><div class="inp">5 秒 <span class="tail">▾</span></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="dfoot"><button class="btn">取消</button><div class="r"><button class="btn">仅保存</button><button class="btn primary">保存并启动</button></div></div>
+</div>`;
+
+const importHTML = `<div class="ov"></div><div class="modal">
+  <div class="mh"><h3>从文件夹导入</h3><span class="path">C:\\Users\\user\\tools</span><span style="margin-left:auto;font-size:9px;color:var(--dim)">重新扫描</span></div>
+  <div class="mb">
+    <table class="tbl">
+      <tr><th style="width:34px"></th><th>文件</th><th style="width:96px">解释器</th><th style="width:86px">端口</th><th style="width:150px">状态</th></tr>
+      <tr class="selrow"><td><span class="cb on">✓</span></td><td class="fn">proxy.mjs</td><td>Node</td><td>15722</td><td class="okt">可导入</td></tr>
+      <tr class="selrow"><td><span class="cb on">✓</span></td><td class="fn">health-check.py</td><td>Python</td><td>8710</td><td class="okt">可导入</td></tr>
+      <tr class="selrow"><td><span class="cb on">✓</span></td><td class="fn">archive.ps1</td><td>PowerShell</td><td>—</td><td class="okt">可导入</td></tr>
+      <tr><td><span class="cb"></span></td><td class="fn">old-proxy.js</td><td>Node</td><td>15721</td><td class="warn">端口已被占用</td></tr>
+      <tr><td><span class="cb"></span></td><td class="fn" style="color:var(--dim)">notes.txt</td><td class="tag">—</td><td class="tag">—</td><td class="tag">不支持的类型</td></tr>
+    </table>
+  </div>
+  <div class="mf"><span>已选择 3 项 · 自动识别解释器与端口，导入后可继续修改</span>
+    <div class="r"><button class="btn">取消</button><button class="btn primary">导入并创建</button></div></div>
+</div>`;
+
+const settingsHTML = `<div class="setwrap">
+  <div class="sethead"><h2>设置</h2><span>PREFERENCES</span></div>
+  <div class="setcard"><h3>外观</h3>
+    <div class="setrow first"><div><div class="lbl">主题</div><div class="hint">浅色与深色各自一套完整配色</div></div>
+      <div class="ctl"><div class="seg" style="width:236px"><div>跟随系统</div><div class="on">深色</div><div>浅色</div></div></div></div>
+    <div class="setrow"><div><div class="lbl">列表密度</div><div class="hint">紧凑模式一屏约可显示 12 条服务</div></div>
+      <div class="ctl"><div class="seg" style="width:150px"><div class="on">紧凑</div><div>标准</div></div></div></div>
+    <div class="setrow"><div><div class="lbl">强调色</div><div class="hint">当前：琥珀</div></div>
+      <div class="ctl"><span style="width:14px;height:14px;border-radius:2px;background:#F0A93B"></span><span style="width:14px;height:14px;border-radius:2px;background:#4ADE80"></span><span style="width:14px;height:14px;border-radius:2px;background:#5B8CFF"></span></div></div>
+  </div>
+  <div class="setcard"><h3>启动与驻留</h3>
+    <div class="setrow first"><div><div class="lbl">开机自启 ScriptDeck</div><div class="hint">登录 Windows 后静默驻留托盘</div></div>
+      <div class="ctl"><div class="sw on"><i></i></div></div></div>
+    <div class="setrow"><div><div class="lbl">关闭主窗口时</div><div class="hint">服务继续在后台运行</div></div>
+      <div class="ctl"><div class="seg" style="width:190px"><div class="on">缩到托盘</div><div>退出应用</div></div></div></div>
+    <div class="setrow"><div><div class="lbl">托盘图标显示状态色</div><div class="hint">绿 = 正常，红 = 有异常，灰 = 全部停止</div></div>
+      <div class="ctl"><div class="sw on"><i></i></div></div></div>
+  </div>
+  <div class="setcard"><h3>日志</h3>
+    <div class="setrow first"><div><div class="lbl">单文件上限</div><div class="hint">超出后自动轮转</div></div>
+      <div class="ctl"><div class="sel">5 MB <span class="c">▾</span></div></div></div>
+    <div class="setrow"><div><div class="lbl">保留份数</div></div><div class="ctl"><div class="sel">5 份 <span class="c">▾</span></div></div></div>
+    <div class="setrow"><div><div class="lbl">日志目录</div><div class="hint">%APPDATA%\\ScriptDeck\\logs</div></div>
+      <div class="ctl"><button class="btn">打开目录</button></div></div>
+  </div>
+</div>`;
+const emptyList = `<div class="empty">
+  <div class="glyph">${ic('grid')}</div>
+  <h3>还没有服务</h3>
+  <p>把常驻脚本接进来，之后开关、状态和日志都在这里。</p>
+  <div class="acts"><button class="btn primary">从文件夹导入</button><button class="btn">手动新建</button></div>
+  <div class="plist">
+    <div class="prow">${ic('folder')}Node HTTP 代理<span>预设</span></div>
+    <div class="prow">${ic('folder')}Python 服务<span>预设</span></div>
+    <div class="prow">${ic('folder')}PowerShell 守护<span>预设</span></div>
+  </div>
+</div>`;
+
+const guideHTML = `<div class="guide">
+  <h2>三步接管你的第一个脚本</h2>
+  <p class="sub">不用改代码，也不用记命令。ScriptDeck 只负责启动它、看着它、把输出留给你。</p>
+  <div class="step"><span class="no">1</span><div><b>选择文件夹</b><span>扫描目录里的 .mjs / .py / .ps1 / .cmd，自动识别解释器和端口。</span></div></div>
+  <div class="step"><span class="no">2</span><div><b>确认候选清单</b><span>勾掉不需要的，端口冲突会在导入前就标出来。</span></div></div>
+  <div class="step"><span class="no">3</span><div><b>保存并启动</b><span>运行状态、日志和健康检查立刻出现在主界面。</span></div></div>
+  <div class="codebox"><div class="dim"># 导入后等价于手动执行</div><div>node proxy.mjs</div><div class="dim"># 工作目录 C:\\Users\\user\\tools\\cors-proxy</div></div>
+</div>`;
+
+function shell(opts){
+ const {active='shim', detail='', listBody=null, noList=false, overlay='', railOn='all', emptyMode=false} = opts;
+ return `${ICONS}<div class="win">
+  <header class="tb">
+    <div class="brand"><span class="mark">S</span>SCRIPTSDECK</div>
+    <div class="glob">${emptyMode?`RUN <b class="run">0</b> &nbsp;/&nbsp; STOP <b class="stop">0</b> &nbsp;/&nbsp; ERR <b class="err">0</b>`:`RUN <b class="run">4</b> &nbsp;/&nbsp; STOP <b class="stop">3</b> &nbsp;/&nbsp; ERR <b class="err">1</b>`}</div>
+    <div class="tbr"><button class="btn primary">+ NEW</button><button class="btn">STOP ALL</button>
+      <div class="wctl"><span>—</span><span>▢</span><span class="close">✕</span></div></div>
+  </header>
+  <div class="body">
+    <aside class="rail">
+      <div class="label">SERVICES</div>
+      <div class="nav ${railOn==='all'?'on':''}">${ic('grid')}全部服务<span class="n">${emptyMode?0:8}</span></div>
+      <div class="nav"><span class="dot" style="background:var(--ok)"></span>代理<span class="n">${emptyMode?0:3}</span></div>
+      <div class="nav"><span class="dot" style="background:var(--accent)"></span>工具<span class="n">${emptyMode?0:2}</span></div>
+      <div class="nav"><span class="dot" style="background:var(--warn)"></span>采集<span class="n">${emptyMode?0:2}</span></div>
+      <div class="nav"><span class="dot" style="background:var(--off)"></span>未分组<span class="n">${emptyMode?0:1}</span></div>
+      <div class="label">SYSTEM</div>
+      <div class="nav">${ic('folder')}导入记录</div>
+      <div class="sp"></div>
+      <div class="foot">
+        <div class="nav ${railOn==='settings'?'on':''}">${ic('settings')}设置</div>
+        <div class="nav">${ic('info')}关于 v1.0.0</div>
+      </div>
+    </aside>
+    ${noList?'':`<section class="list">${emptyMode?headEmpty:headHTML}${listBody===null?`<div class="rows">${rowsHTML(active)}</div>`:listBody}</section>`}
+    <section class="detail">${detail}</section>
+  </div>
+  ${overlay}
+ </div>`;
+}
+
+const trayHTML = `<div class="traybody"><div class="tray">
+  <div class="th"><span class="dot" style="background:var(--ok)"></span>脚本坞 · <b>4 运行中</b><span style="margin-left:auto">1 异常</span></div>
+  <div class="tl">
+    <div class="ti"><span class="dot" style="background:var(--ok)"></span><span class="nm">CORS 中转服务</span><span class="tm">2h14m</span><span style="color:var(--dim)">■</span></div>
+    <div class="ti"><span class="dot" style="background:var(--ok)"></span><span class="nm">字幕监听器</span><span class="tm">41m</span><span style="color:var(--dim)">■</span></div>
+    <div class="ti"><span class="dot" style="background:var(--ok)"></span><span class="nm">图片压缩服务</span><span class="tm">6h02m</span><span style="color:var(--dim)">■</span></div>
+    <div class="ti"><span class="dot" style="background:var(--bad)"></span><span class="nm" style="color:#E9A0A0">旧版翻译代理</span><span class="tm" style="color:var(--bad)">已退出</span><span style="color:var(--dim)">▶</span></div>
+  </div>
+  <div class="tsep"></div>
+  <div class="tmi">${ic('grid')}打开主界面<span class="k">Ctrl+Shift+S</span></div>
+  <div class="tmi">■ 全部停止</div>
+  <div class="tmi">↻ 重启异常服务<span class="k">1</span></div>
+  <div class="tsep"></div>
+  <div class="tmi">开机自启<span class="k">✓ 已开启</span></div>
+  <div class="tmi">退出</div>
+  <div class="tfoot"><span class="dot" style="background:var(--ok)"></span>4 运行 · 3 停止 · 1 异常</div>
+</div></div>`;
+
+const s = new URLSearchParams(location.search).get('s') || 'overview';
+let out;
+if(s==='new') out = shell({detail:detailOverview(), overlay:drawerHTML});
+else if(s==='import') out = shell({detail:detailOverview(), overlay:importHTML});
+else if(s==='settings') out = shell({noList:true, detail:settingsHTML, railOn:'settings'});
+else if(s==='empty') out = shell({detail:guideHTML, listBody:emptyList, emptyMode:true});
+else if(s==='error') out = shell({active:'old', detail:detailError()});
+else if(s==='tray') out = trayHTML;
+else out = shell({detail:detailOverview()});
+document.body.innerHTML = out;
+</script>
+</body>
+</html>

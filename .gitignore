@@ -1,0 +1,7 @@
+node_modules/
+out/
+release/
+design/shots/
+design/*.png
+*.log
+.DS_Store

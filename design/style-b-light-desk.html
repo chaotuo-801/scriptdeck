@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>ScriptDeck · 风格 B 浅色工作台</title>
+<style>
+:root{
+  --bg:#F4F6F9; --panel:#FFFFFF; --soft:#F8FAFC; --line:#E1E5EB; --line2:#EDF0F4;
+  --text:#171A1F; --muted:#667085; --dim:#98A2B3; --accent:#3D6FE0; --accent-soft:#EEF3FE;
+  --ok:#1E9E6F; --ok-soft:#ECF8F3; --warn:#B87513; --warn-soft:#FDF4E7;
+  --bad:#CC3A3F; --bad-soft:#FDF0F0; --off:#7A828D;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:#E8ECF2;display:flex;align-items:center;justify-content:center;
+  font-family:"Noto Sans SC","Microsoft YaHei UI",system-ui,sans-serif;color:var(--text);
+  -webkit-font-smoothing:antialiased}
+.i{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.win{width:1120px;height:720px;background:var(--bg);border-radius:12px;overflow:hidden;
+  display:flex;flex-direction:column;border:1px solid #DCE2EA;box-shadow:0 26px 70px rgba(23,34,55,.16)}
+.tb{height:48px;flex:none;display:flex;align-items:center;gap:14px;padding:0 0 0 18px;
+  background:var(--panel);border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:9px;font-size:13.5px;font-weight:600;width:150px}
+.mark{width:22px;height:22px;border-radius:6px;background:var(--accent);color:#fff;display:flex;
+  align-items:center;justify-content:center;font-size:11.5px;font-weight:700;box-shadow:0 2px 6px rgba(61,111,224,.28)}
+.search{height:32px;width:300px;display:flex;align-items:center;gap:8px;padding:0 10px;
+  background:#F3F5F8;border:1px solid transparent;border-radius:999px;color:var(--dim);font-size:12.5px}
+.search kbd{margin-left:auto;font-family:inherit;font-size:10px;color:var(--dim);border:1px solid var(--line);
+  border-radius:3px;padding:1px 5px;background:#fff}
+.tbr{margin-left:auto;display:flex;align-items:center;gap:8px;padding-right:0}
+.btn{font-family:inherit;display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 12px;
+  border-radius:7px;border:1px solid var(--line);background:#fff;color:var(--text);font-size:12.5px;cursor:pointer}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:500;
+  box-shadow:0 1px 2px rgba(61,111,224,.25)}
+.btn.ghost{background:transparent;border-color:transparent;color:var(--muted)}
+.wctl{display:flex;margin-left:8px}
+.wctl span{width:44px;height:48px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:11px}
+.wctl span.close:hover{background:#E5484D;color:#fff}
+.body{flex:1;display:flex;min-height:0}
+.rail{width:228px;flex:none;padding:14px 12px;background:var(--soft);border-right:1px solid var(--line);display:flex;flex-direction:column}
+.rail .label{font-size:10.5px;color:var(--dim);padding:12px 10px 7px;letter-spacing:.04em}
+.nav{height:34px;display:flex;align-items:center;gap:9px;padding:0 10px;border-radius:8px;
+  font-size:12.5px;color:var(--muted);cursor:pointer}
+.nav .n{margin-left:auto;font-size:11px;color:var(--dim)}
+.nav.on{background:#fff;color:var(--accent);font-weight:600;box-shadow:0 1px 3px rgba(23,34,55,.08)}
+.nav .dot{width:7px;height:7px;border-radius:50%;flex:none}
+.rail .sp{flex:1}
+.rail .foot{border-top:1px solid var(--line);padding-top:8px;margin-top:10px}
+.list{width:356px;flex:none;display:flex;flex-direction:column;background:var(--soft);border-right:1px solid var(--line)}
+.lhead{padding:16px 18px 10px;flex:none}
+.ltitle{display:flex;align-items:baseline;gap:8px;margin-bottom:11px}
+.ltitle h1{font-size:15px;margin:0;font-weight:600}
+.ltitle span{font-size:11.5px;color:var(--dim)}
+.chips{display:flex;gap:6px}
+.chip{display:inline-flex;align-items:center;gap:5px;height:24px;padding:0 9px;border-radius:999px;
+  font-size:11px;color:var(--muted);background:#fff;border:1px solid var(--line)}
+.chip b{color:var(--text);font-weight:600}
+.dot{width:6px;height:6px;border-radius:50%;flex:none}
+.rows{flex:1;overflow:hidden;padding:2px 12px 12px}
+.row{height:58px;display:flex;align-items:center;gap:10px;padding:0 12px;margin-bottom:6px;
+  background:#fff;border:1px solid var(--line2);border-radius:9px;cursor:pointer}
+.row:hover{box-shadow:0 2px 8px rgba(23,34,55,.07)}
+.row.on{background:#fff;border-color:#BBD0F7;box-shadow:0 0 0 3px var(--accent-soft),0 2px 8px rgba(23,34,55,.06)}
+.rinfo{min-width:0;flex:1}
+.rname{font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rmeta{font-size:11px;color:var(--dim);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rright{display:flex;align-items:center;gap:6px;flex:none}
+.rtime{font-size:10.5px;color:var(--dim);font-variant-numeric:tabular-nums}
+.iconbtn{width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;
+  color:var(--accent);background:var(--accent-soft);border:1px solid #DCE7FB}
+.iconbtn .i{width:12px;height:12px}
+.detail{flex:1;min-width:0;display:flex;flex-direction:column;background:#fff}
+.dhead{padding:20px 24px 0;flex:none}
+.dtitle{display:flex;align-items:center;gap:10px}
+.dtitle h2{margin:0;font-size:17px;font-weight:600;letter-spacing:.1px}
+.pill{display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 9px;border-radius:999px;
+  font-size:11px;font-weight:500}
+.pill.ok{color:var(--ok);background:var(--ok-soft)}
+.dacts{margin-left:auto;display:flex;gap:6px}
+.dpath{font-size:11px;color:var(--dim);margin-top:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tabs{display:flex;gap:4px;margin-top:18px;border-bottom:1px solid var(--line)}
+.tab{padding:0 12px 10px;font-size:12.5px;color:var(--muted);cursor:pointer}
+.tab.on{color:var(--accent);font-weight:600;box-shadow:inset 0 -2px 0 var(--accent)}
+.dbody{flex:1;padding:18px 24px 20px;overflow:hidden;display:flex;flex-direction:column;gap:16px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.stat{border:1px solid var(--line);border-radius:10px;padding:13px 14px;background:#fff}
+.stat.tint{background:var(--ok-soft);border-color:#D8EEE5}
+.stat .k{font-size:11px;color:var(--muted)}
+.stat .v{font-size:14px;margin-top:7px;display:flex;align-items:center;gap:6px;font-weight:600}
+.stat .v small{font-size:11px;color:var(--muted);font-weight:400}
+.sec{display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--muted)}
+.sec:after{content:"";flex:1;height:1px;background:var(--line2)}
+.events{border:1px solid var(--line);border-radius:10px;padding:4px 14px;background:#fff}
+.ev{display:flex;gap:12px;padding:9px 0;font-size:12px;color:var(--muted);border-top:1px solid var(--line2)}
+.ev:first-child{border-top:0}
+.ev time{font-size:11px;color:var(--dim);flex:none;font-variant-numeric:tabular-nums}
+.ev b{color:var(--text);font-weight:600}
+.logs{flex:1;min-height:0;background:#FBFCFE;border:1px solid var(--line);border-radius:10px;display:flex;flex-direction:column;overflow:hidden}
+.logbar{height:36px;flex:none;display:flex;align-items:center;gap:8px;padding:0 14px;border-bottom:1px solid var(--line2);font-size:11.5px;color:var(--muted)}
+.logbar .follow{margin-left:auto;display:flex;align-items:center;gap:5px;color:var(--ok);font-weight:500}
+.logbody{padding:10px 14px;font-family:Consolas,"Cascadia Code",monospace;font-size:11px;line-height:1.95;overflow:hidden}
+.ln{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#475467}
+.ln time{color:#A6AEB9;margin-right:9px}
+.lv{display:inline-block;width:40px;color:#A6AEB9}
+.ln.warn .lv{color:var(--warn)}
+.ln.warn{color:#8A6A2F}
+.ln .dim{color:#98A2B3}
+.cmd{display:flex;align-items:center;gap:9px;font-family:Consolas,"Cascadia Code",monospace;font-size:11.5px;
+  color:var(--muted);background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:10px 12px}
+.cmd b{color:var(--text);font-weight:600}
+.cmd .copy{margin-left:auto;color:var(--accent);font-size:11px;font-family:"Noto Sans SC",sans-serif}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute">
+  <symbol id="i-search" viewBox="0 0 16 16"><circle cx="7" cy="7" r="4.3"/><path d="M10.4 10.4L14 14"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 16 16"><path d="M8 3v10M3 8h10"/></symbol>
+  <symbol id="i-grid" viewBox="0 0 16 16"><rect x="2.5" y="2.5" width="4.6" height="4.6" rx="1"/><rect x="8.9" y="2.5" width="4.6" height="4.6" rx="1"/><rect x="2.5" y="8.9" width="4.6" height="4.6" rx="1"/><rect x="8.9" y="8.9" width="4.6" height="4.6" rx="1"/></symbol>
+  <symbol id="i-folder" viewBox="0 0 16 16"><path d="M2 4.6h4l1.3 1.6H14v7H2z"/></symbol>
+  <symbol id="i-settings" viewBox="0 0 16 16"><circle cx="8" cy="8" r="2.2"/><path d="M8 1.8v1.6M8 12.6v1.6M1.8 8h1.6M12.6 8h1.6M3.6 3.6l1.1 1.1M11.3 11.3l1.1 1.1M12.4 3.6l-1.1 1.1M4.7 11.3l-1.1 1.1"/></symbol>
+  <symbol id="i-info" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6"/><path d="M8 7.2v4M8 4.9v.2"/></symbol>
+  <symbol id="i-stop" viewBox="0 0 16 16"><rect x="4.2" y="4.2" width="7.6" height="7.6" rx="1.2"/></symbol>
+  <symbol id="i-restart" viewBox="0 0 16 16"><path d="M13.2 8a5.2 5.2 0 11-1.6-3.8"/><path d="M13.4 2.6v3.2h-3.2"/></symbol>
+  <symbol id="i-more" viewBox="0 0 16 16"><circle cx="3.4" cy="8" r=".9"/><circle cx="8" cy="8" r=".9"/><circle cx="12.6" cy="8" r=".9"/></symbol>
+</svg>
+
+<div class="win">
+  <header class="tb">
+    <div class="brand"><span class="mark">S</span>脚本坞</div>
+    <div class="search"><svg class="i" style="width:14px;height:14px"><use href="#i-search"/></svg><span>搜索服务、端口或命令</span><kbd>Ctrl F</kbd></div>
+    <div class="tbr">
+      <button class="btn primary"><svg class="i" style="width:13px;height:13px"><use href="#i-plus"/></svg>新建服务</button>
+      <div class="wctl"><span>—</span><span>▢</span><span class="close">✕</span></div>
+    </div>
+  </header>
+
+  <div class="body">
+    <aside class="rail">
+      <div class="label">服务</div>
+      <div class="nav on"><svg class="i"><use href="#i-grid"/></svg>全部服务<span class="n">8</span></div>
+      <div class="nav"><span class="dot" style="background:var(--ok)"></span>代理<span class="n">3</span></div>
+      <div class="nav"><span class="dot" style="background:var(--accent)"></span>工具<span class="n">2</span></div>
+      <div class="nav"><span class="dot" style="background:var(--warn)"></span>采集<span class="n">2</span></div>
+      <div class="nav"><span class="dot" style="background:var(--dim)"></span>未分组<span class="n">1</span></div>
+      <div class="label">其他</div>
+      <div class="nav"><svg class="i"><use href="#i-folder"/></svg>导入记录</div>
+      <div class="sp"></div>
+      <div class="foot">
+        <div class="nav"><svg class="i"><use href="#i-settings"/></svg>设置</div>
+        <div class="nav"><svg class="i"><use href="#i-info"/></svg>关于 · v1.0.0</div>
+      </div>
+    </aside>
+
+    <section class="list">
+      <div class="lhead">
+        <div class="ltitle"><h1>全部服务</h1><span>8 个</span></div>
+        <div class="chips">
+          <span class="chip"><span class="dot" style="background:var(--ok)"></span>运行中 <b>4</b></span>
+          <span class="chip"><span class="dot" style="background:var(--off)"></span>已停止 <b>3</b></span>
+          <span class="chip"><span class="dot" style="background:var(--bad)"></span>异常 <b>1</b></span>
+        </div>
+      </div>
+      <div class="rows">
+        <div class="row on">
+          <span class="dot" style="background:var(--ok)"></span>
+          <div class="rinfo"><div class="rname">CORS 中转服务</div><div class="rmeta">node · 127.0.0.1:15722</div></div>
+          <div class="rright"><span class="rtime">2h 14m</span><span class="iconbtn"><svg class="i"><use href="#i-stop"/></svg></span></div>
+        </div>
+        <div class="row">
+          <span class="dot" style="background:var(--ok)"></span>
+          <div class="rinfo"><div class="rname">字幕监听器</div><div class="rmeta">python · 127.0.0.1:8710</div></div>
+          <div class="rright"><span class="rtime">41m</span></div>
+        </div>
+        <div class="row">
+          <span class="dot" style="background:var(--ok)"></span>
+          <div class="rinfo"><div class="rname">图片压缩服务</div><div class="rmeta">node · 127.0.0.1:6001</div></div>
+          <div class="rright"><span class="rtime">6h 02m</span></div>
+        </div>
+        <div class="row">
+          <span class="dot" style="background:var(--ok)"></span>
+          <div class="rinfo"><div class="rname">本地 OCR 网关</div><div class="rmeta">python · 127.0.0.1:9002</div></div>
+          <div class="rright"><span class="rtime">6h 02m</span></div>
+        </div>
+        <div class="row">
+          <span class="dot" style="background:var(--bad)"></span>
+          <div class="rinfo"><div class="rname">旧版翻译代理</div><div class="rmeta">node · 127.0.0.1:15721</div></div>
+          <div class="rright"><span class="rtime" style="color:var(--bad);font-weight:600">异常</span></div>
+        </div>
+        <div class="row">
+          <span class="dot" style="background:var(--off)"></span>
+          <div class="rinfo"><div class="rname">抖音财报抓取</div><div class="rmeta">node · 无端口</div></div>
+          <div class="rright"><span class="rtime">—</span></div>
+        </div>
+        <div class="row">
+          <span class="dot" style="background:var(--off)"></span>
+          <div class="rinfo"><div class="rname">剪贴板归档</div><div class="rmeta">pwsh · 无端口</div></div>
+          <div class="rright"><span class="rtime">—</span></div>
+        </div>
+        <div class="row">
+          <span class="dot" style="background:var(--off)"></span>
+          <div class="rinfo"><div class="rname">端口探针</div><div class="rmeta">node · 无端口</div></div>
+          <div class="rright"><span class="rtime">—</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="detail">
+      <div class="dhead">
+        <div class="dtitle">
+          <h2>CORS 中转服务</h2>
+          <span class="pill ok"><span class="dot" style="background:var(--ok)"></span>运行中</span>
+          <div class="dacts">
+            <button class="btn"><svg class="i" style="width:13px;height:13px"><use href="#i-stop"/></svg>停止</button>
+            <button class="btn"><svg class="i" style="width:13px;height:13px"><use href="#i-restart"/></svg>重启</button>
+            <button class="btn ghost" style="width:30px;justify-content:center;padding:0"><svg class="i"><use href="#i-more"/></svg></button>
+          </div>
+        </div>
+        <div class="dpath">C:\Users\user\tools\cors-proxy\proxy.mjs</div>
+        <div class="tabs">
+          <div class="tab on">概览</div><div class="tab">日志</div><div class="tab">配置</div><div class="tab">健康</div>
+        </div>
+      </div>
+
+      <div class="dbody">
+        <div class="stats">
+          <div class="stat tint"><div class="k">健康检查</div><div class="v"><span class="dot" style="background:var(--ok)"></span>端口可连 <small>3 ms</small></div></div>
+          <div class="stat"><div class="k">本次运行</div><div class="v">2 小时 14 分</div></div>
+          <div class="stat"><div class="k">自动重启</div><div class="v">0 <small>/ 5 次</small></div></div>
+        </div>
+
+        <div class="cmd"><b>node proxy.mjs</b><span style="color:var(--dim)">·</span><span>PID 29648</span><span class="copy">复制命令</span></div>
+
+        <div class="sec">最近事件</div>
+        <div class="events">
+          <div class="ev"><time>09:21</time><span>健康检查通过 · 端口 <b>15722</b> 响应正常</span></div>
+          <div class="ev"><time>09:19</time><span>服务已启动，监听 <b>127.0.0.1:15722</b></span></div>
+          <div class="ev"><time>09:19</time><span>启动前检查端口占用，<b>15722</b> 空闲</span></div>
+        </div>
+
+        <div class="sec">日志预览 <span style="margin-left:auto;color:var(--dim);font-size:11px">实时跟随</span></div>
+        <div class="logs">
+          <div class="logbar"><span>最近 5 条</span><span style="color:var(--line)">|</span><span>UTF-8</span><span class="follow"><span class="dot" style="background:var(--ok)"></span>跟随中</span></div>
+          <div class="logbody">
+            <div class="ln"><time>09:19:20</time><span class="lv">INFO</span>CORS shim listening on http://127.0.0.1:15722 <span class="dim">-&gt;</span> http://127.0.0.1:15721</div>
+            <div class="ln"><time>09:20:03</time><span class="lv">INFO</span>POST /v1/chat/completions <span class="dim">200 3.5s</span></div>
+            <div class="ln"><time>09:20:11</time><span class="lv">INFO</span>POST /v1/chat/completions <span class="dim">200 2.9s</span></div>
+            <div class="ln"><time>09:21:44</time><span class="lv">INFO</span>OPTIONS /v1/chat/completions <span class="dim">204</span></div>
+            <div class="ln warn"><time>09:22:02</time><span class="lv">WARN</span>上游响应较慢 <span class="dim">6.2s · retry 0/2</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+</body>
+</html>
