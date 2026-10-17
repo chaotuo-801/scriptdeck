@@ -16,7 +16,7 @@
 
 ## 安装
 
-- `ScriptDeck Setup 0.1.0.exe`：安装版
+- `ScriptDeck.Setup.0.1.0.exe`：安装版
 - `ScriptDeck-0.1.0-portable.exe`：便携版
 
 系统要求 Windows 10/11 x64。安装包未签名，首次运行请通过 SmartScreen 的「更多信息 → 仍要运行」。

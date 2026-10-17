@@ -31,7 +31,7 @@ ScriptDeck 把每个脚本变成一条有状态、有日志、有开关的服务
 
 | 文件 | 说明 |
 | --- | --- |
-| `ScriptDeck Setup 0.1.0.exe` | 安装版，带开始菜单与卸载项 |
+| `ScriptDeck.Setup.0.1.0.exe` | 安装版，带开始菜单与卸载项 |
 | `ScriptDeck-0.1.0-portable.exe` | 便携版，双击即用，不写安装目录 |
 
 安装包未做代码签名，首次运行会被 SmartScreen 拦截，点「更多信息 → 仍要运行」即可。
